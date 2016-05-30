@@ -55,6 +55,3 @@ var ConsultantSchema = new mongoose.Schema({
 }); 
 
 var Consultant = mongoose.model('Consultant', ConsultantSchema);
-
-module.exports = {
-}
