@@ -4,8 +4,6 @@ var csvToJson = require("csvtojson");
 var mongoose = require('mongoose');
 var ConsultantModel = mongoose.model('Consultant');
 
-//var fs = require('fs');
-
 model.research = function (req, res) {
 
 	ConsultantModel.find({},function (err, consultants) {

@@ -10,7 +10,9 @@ var connect = function() {
             console.log('ERROR connecting to: ' + _dbUri + '. ' + err);
             setTimeout(connect, 10000);
         }
-        else { console.log('Succeeded connected to: ' + _dbUri); }
+        else { 
+			console.log('Succeeded connected to: ' + _dbUri); 
+		}
     };
     mongoose.connect(_dbUri, cb);
 };
@@ -26,5 +28,3 @@ var ConsultantSchema = new Schema({
 }); 
 
 var Consultant = mongoose.model('Consultant', ConsultantSchema);
-
-//Consultant = module.exports;
