@@ -1,15 +1,18 @@
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId;
+var model = module.exports;
 
-mongoose.connect('mongodb://localhost/CGI');
+var csvToJson = require("csvtojson");
+var mongoose = require('mongoose');
+var ConsultantModel = mongoose.model('Consultant');
 
-var ConsultantSchema = new mongoose.Schema({
-    First_name: { type: String, required: true }, 
-    Last_name: { type: String, required: true },
-    Competences: { type: String, required: true },
-    Projets: { type: String, required: true },
-    date_created: { type: Date, required: true, default: Date.now }
-}); 
+//var fs = require('fs');
 
-var Consultant = mongoose.model('Consultant', ConsultantSchema);
+model.research = function (req, res) {
+
+	ConsultantModel.find({},function (err, consultants) {
+  		if (err) {
+    		console.log('err');
+  		} else {
+    		res.json(consultants);
+  		}
+	});
+}

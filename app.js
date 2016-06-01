@@ -1,57 +1,35 @@
-// Test connection 
 
-var express = require('express');
+var application_root = __dirname,
+    express = require("express"),
+    bodyParser = require('body-parser'),
+    fileUpload = require('express-fileupload'),
+    models = require('./models/modelSchema'),
+    insertData = require('./models/insertData'),
+	researchData = require('./models/researchData')
+	fs = require('fs');
+
 var app = express();
-var MongoClient = require("mongodb").MongoClient;
 
-app.get('/', function (req, res) {
- res.send("Hello world from server.js");
+app.use(fileUpload());
+app.use(bodyParser.json());
+
+app.get('/api/', function(req, res){
+	res.sendFile(application_root+'/view/index.html');
 });
+
+app.post('/api/upload', function(req, res){
+	var newPath = __dirname + '/files/'+req.files.file.name;
+	fs.writeFile(newPath, req.files.file.data, function (err) {
+		if(err) {throw err;}
+	    res.redirect('back');
+	});
+});
+
+app.get('/api/insertConsultant', insertData.insert);
+app.get('/api/researchConsultant', researchData.research);
 
 app.listen(3000);
-console.log('Server running on port 3000'); 
+console.log('Server running on port 3000');
 
-// convert CSV file to JSON file
 
-var Converter=require("csvtojson").Converter;
-var columArrData=__dirname+"/consultant.csv";
-var fs = require('fs');
-var rs=fs.createReadStream(columArrData);
-var result = {}
-var csvConverter=new Converter();
- 
-csvConverter.on("record_parsed", function(resultRow, rawRow, rowIndex) {
-    for (var key in resultRow) {
-        if (!result[key] || !result[key] instanceof Array) {
-            result[key] = [];
-        }
-        result[key][rowIndex] = resultRow[key];
-    }
-});
-rs.pipe(csvConverter);
 
-// Insert Data in MongoDB 
-
-MongoClient.connect("mongodb://localhost/CGI", function(error, db) {
-    if (error) throw error;
-    
-    db.collection("Consultant").insert(result, null, function (error, results) {
-        if (error) throw error;    
-    });
-});
-
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId;
-
-mongoose.connect('mongodb://localhost/CGI');
-
-var ConsultantSchema = new mongoose.Schema({
-    First_name: { type: String, required: true }, 
-    Last_name: { type: String, required: true },
-    Competences: { type: String, required: true },
-    Projets: { type: String, required: true },
-    date_created: { type: Date, required: true, default: Date.now }
-}); 
-
-var Consultant = mongoose.model('Consultant', ConsultantSchema);
