@@ -14,3 +14,16 @@ model.research = function (req, res) {
   		}
 	});
 }
+
+model.researchConsultant = function(id,callback){
+	
+	ConsultantModel.findById(id, function(err, consultant){
+		if(err) {
+			console.log(err);
+		} else if(consultant == null) {
+			console.log('Désolé, consultant inexistant');
+			callback.json(consultant);		
+		} else{callback.json(consultant); }
+	});
+	
+}

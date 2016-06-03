@@ -10,34 +10,41 @@ var path = require('path');
 
 model.insert = function (req, res) {
 
-	var srcpath = './files';
-
+	var srcpath = __dirname + '/files';
+	
+	var newPath = __dirname + '/files/'+req.files.file.name;
+	fs.writeFile(newPath, req.files.file.data, function (err) {
+		if(err) {throw err;}
+	    res.redirect('back');
+	});
+	
 	function getDirectories(srcpath) {
+		console.log(srcpath);
 		return fs.readdirSync(srcpath).filter(function(file) {
 			if(!fs.statSync(path.join(srcpath, file)).isDirectory()){
 				var data=csv.csvtojson(path.join(srcpath, file));
 		
 				for (var i=0; i< data.length; i++){
-					var consultant = new ConsultantModel({
-						_id : data[i].EmployeesNo,
-						firstName : data[i].Prenom,
-						lastName : data[i].Nom,
-						projects : data[i].Projet,
-						competencies : data[i].Competences,
+				
+					var consultant = new ConsultantModel;
+					
+					consultant._id = data[i].EmployeesNo;
+					consultant.firstName = data[i].Prenom,
+					consultant.lastName = data[i].Nom;
+					consultant.competencies.push(data[i].Competences);
+					consultant.projects.push(data[i].Projets);
+					
+					ConsultantModel.update({_id: consultant._id}, {$set: {firstName: consultant.firstName, lastName: consultant.lastName}, 
+																	$addToSet: {competencies: data[i].Competences, projects: data[i].Projets}}, { multi : true, upsert: true }, function (err, consultant){
+						if(err) console.log(err);
 					});
-		
-					consultant.save(function (err, consultant) {
-						if (err) {
-							console.log(err);
-						} else {
-							console.log('meow');
-						}
-					});
+					
 					console.log(consultant);
 				}
 			}
-		
 		});
 	} 
+	
 	getDirectories(srcpath);
+
 }
