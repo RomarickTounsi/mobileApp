@@ -10,7 +10,7 @@ var path = require('path');
 
 model.insert = function (req, res) {
 
-	var srcpath = __dirname + '/files';
+	var srcpath = './files';
 	
 	/*var newPath = __dirname + '/files/'+req.files.file.name;
 	fs.writeFile(newPath, req.files.file.data, function (err) {
@@ -35,7 +35,7 @@ model.insert = function (req, res) {
 					consultant.projects.push(data[i].Projets);
 					
 					ConsultantModel.update({_id: consultant._id}, {$set: {firstName: consultant.firstName, lastName: consultant.lastName}, 
-																	$addToSet: {competencies: data[i].Competences, projects: data[i].Projets}}, { multi : true, upsert: true }, function (err, consultant){
+										      $addToSet: {competencies: data[i].Competences, projects: data[i].Projets}}, { multi : true, upsert: true }, function (err, consultant){
 						if(err) console.log(err);
 					});
 					
