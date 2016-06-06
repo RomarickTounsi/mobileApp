@@ -10,13 +10,14 @@ var path = require('path');
 
 model.insert = function (req, res) {
 
-	var srcpath = './files';
+	var srcpath = __dirname + '/files';
 	
-	/*var newPath = __dirname + '/files/'+req.files.file.name;
+	var newPath = __dirname + '/files/'+req.files.file.name;
 	fs.writeFile(newPath, req.files.file.data, function (err) {
 		if(err) {throw err;}
-	    res.redirect('back');
-	});*/
+		else getDirectories(srcpath);
+		res.redirect('back');
+	});
 	
 	function getDirectories(srcpath) {
 		console.log(srcpath);
@@ -44,7 +45,4 @@ model.insert = function (req, res) {
 			}
 		});
 	} 
-	
-	getDirectories(srcpath);
-
 }
