@@ -17,14 +17,13 @@ app.get('/api/', function(req, res){
 	res.sendFile(application_root+'/view/index.html');
 });
 
-app.post('/api/upload', function(req, res){
+/*app.post('/api/upload', function(req, res){
 	var newPath = __dirname + '/files/'+req.files.file.name;
 	fs.writeFile(newPath, req.files.file.data, function (err) {
 		if(err) {throw err;}
 	    res.redirect('back');
 	});
-	
-});
+}); */
 
 app.post('/api/insertConsultant', insertData.insert);
 app.get('/api/researchConsultant', researchData.research);
