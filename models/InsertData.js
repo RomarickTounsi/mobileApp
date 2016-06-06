@@ -12,11 +12,11 @@ model.insert = function (req, res) {
 
 	var srcpath = __dirname + '/files';
 	
-	var newPath = __dirname + '/files/'+req.files.file.name;
+	/*var newPath = __dirname + '/files/'+req.files.file.name;
 	fs.writeFile(newPath, req.files.file.data, function (err) {
 		if(err) {throw err;}
 	    res.redirect('back');
-	});
+	});*/
 	
 	function getDirectories(srcpath) {
 		console.log(srcpath);
