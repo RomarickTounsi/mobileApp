@@ -11,14 +11,21 @@ var path = require('path');
 model.insert = function (req, res) {
 
 	var srcpath = __dirname + '/files';
-	
 	var newPath = __dirname + '/files/'+req.files.file.name;
+	
 	fs.writeFile(newPath, req.files.file.data, function (err) {
 		if(err) {throw err;}
-		else getDirectories(srcpath);
+		getDirectories(srcpath);
 		res.redirect('back');
+
+		fs.unlink(newPath, function(err) {
+			if (err) {
+				return console.error(err);
+			}
+			console.log("File deleted successfully!");
+		});
 	});
-	
+		
 	function getDirectories(srcpath) {
 		console.log(srcpath);
 		return fs.readdirSync(srcpath).filter(function(file) {
@@ -39,7 +46,6 @@ model.insert = function (req, res) {
 										      $addToSet: {competencies: data[i].Competences, projects: data[i].Projets}}, { multi : true, upsert: true }, function (err, consultant){
 						if(err) console.log(err);
 					});
-					
 					console.log(consultant);
 				}
 			}
